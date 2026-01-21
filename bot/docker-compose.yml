@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: himcentre-haccp-audit-bot
+    container_name: himcentre-cleaning-bot
     restart: unless-stopped
     env_file:
       - ../.env

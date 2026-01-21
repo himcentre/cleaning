@@ -21,8 +21,8 @@ const lastChecklistData = new Map();
 
 // Типы форм
 const FORM_TYPES = {
-  AUDIT: 'audit',
-  CHECKLIST: 'checklist'
+  AUDIT: 'consultation',
+  CHECKLIST: 'kit'
 };
 
 // Шаги для формы аудита
@@ -33,17 +33,18 @@ const AUDIT_STEPS = {
   WAITING_FOR_PHONE: 'waiting_for_phone'
 };
 
-// Шаги для формы чек-листа
+// Шаги для формы получения набора средств
 const CHECKLIST_STEPS = {
   WAITING_FOR_PD_AGREEMENT: 'waiting_for_pd_agreement',
   WAITING_FOR_START: 'waiting_for_start',
-  WAITING_FOR_COMPANY: 'waiting_for_company',
-  WAITING_FOR_FORMAT: 'waiting_for_format',
-  WAITING_FOR_FORMAT_OTHER: 'waiting_for_format_other',
-  WAITING_FOR_STAGE: 'waiting_for_stage',
-  WAITING_FOR_READINESS: 'waiting_for_readiness',
   WAITING_FOR_NAME: 'waiting_for_name',
-  WAITING_FOR_PHONE: 'waiting_for_phone'
+  WAITING_FOR_ORGANIZATION: 'waiting_for_organization',
+  WAITING_FOR_PHONE: 'waiting_for_phone',
+  WAITING_FOR_OBJECTS: 'waiting_for_objects',
+  WAITING_FOR_OBJECTS_OTHER: 'waiting_for_objects_other',
+  WAITING_FOR_SCALE: 'waiting_for_scale',
+  WAITING_FOR_PROBLEMS: 'waiting_for_problems',
+  WAITING_FOR_PROBLEMS_OTHER: 'waiting_for_problems_other'
 };
 
 async function requestPdAgreement(ctx, formType) {
@@ -114,7 +115,7 @@ async function handleAuditResponse(ctx) {
       
       // Отправляем данные админу
       const adminMessage = 
-        '📋 Новая заявка на аудит:\n\n' +
+        '📋 Новая заявка на консультацию:\n\n' +
         `👤 ФИО: ${state.data.name}\n` +
         `🏢 Организация: ${state.data.organization}\n` +
         `📞 Телефон: ${state.data.phone}\n` +
@@ -122,10 +123,10 @@ async function handleAuditResponse(ctx) {
 
       try {
         await bot.telegram.sendMessage(ADMIN_ID, adminMessage);
-        await ctx.reply('✅ Спасибо! Ваша заявка на аудит отправлена. Мы свяжемся с вами в ближайшее время.');
+        await ctx.reply('✅ Спасибо! Ваша заявка на консультацию отправлена. Мы свяжемся с вами в ближайшее время.');
       } catch (e) {
         console.error('Ошибка при отправке сообщения админу:', e);
-        await ctx.reply('⚠️ Ошибка при отправке заявки на аудит. Пожалуйста, свяжитесь с администратором.');
+        await ctx.reply('⚠️ Ошибка при отправке заявки на консультацию. Пожалуйста, свяжитесь с администратором.');
       }
       
       // Очищаем состояние
@@ -137,7 +138,7 @@ async function handleAuditResponse(ctx) {
   }
 }
 
-// Обработка ответов для формы чек-листа
+// Обработка ответов для формы получения набора средств
 async function handleChecklistResponse(ctx) {
   const userId = ctx.from.id;
   const state = userStates.get(userId);
@@ -154,115 +155,70 @@ async function handleChecklistResponse(ctx) {
       return false;
 
     case CHECKLIST_STEPS.WAITING_FOR_START:
-      // Обрабатывается через callback
-      return false;
-
-    case CHECKLIST_STEPS.WAITING_FOR_COMPANY:
-      state.data.company = text;
-      state.step = CHECKLIST_STEPS.WAITING_FOR_FORMAT;
-      await ctx.reply(
-        'Какой у вас формат?',
-        Markup.inlineKeyboard([
-          [Markup.button.callback('Кафе / ресторан', 'format_cafe')],
-          [Markup.button.callback('Бар / кофейня', 'format_bar')],
-          [Markup.button.callback('Столовая', 'format_canteen')],
-          [Markup.button.callback('Пекарня / кулинария', 'format_bakery')],
-          [Markup.button.callback('Производственная кухня', 'format_production')],
-          [Markup.button.callback('Другое', 'format_other')]
-        ])
-      );
-      return true;
-
-    case CHECKLIST_STEPS.WAITING_FOR_FORMAT_OTHER:
-      state.data.format = text;
-      state.step = CHECKLIST_STEPS.WAITING_FOR_STAGE;
-      await ctx.reply(
-        'На каком этапе вы сейчас?',
-        Markup.inlineKeyboard([
-          [Markup.button.callback('Работаем, были проверки', 'stage_working_checked')],
-          [Markup.button.callback('Работаем, проверок не было', 'stage_working_unchecked')],
-          [Markup.button.callback('Открытие / запуск', 'stage_opening')],
-          [Markup.button.callback('Получали предписание', 'stage_warning')]
-        ])
-      );
-      return true;
-
-    case CHECKLIST_STEPS.WAITING_FOR_STAGE:
-      // Обрабатывается через callback
-      return false;
-
-    case CHECKLIST_STEPS.WAITING_FOR_READINESS:
-      // Обрабатывается через callback
+      // Обрабатывается через callback-кнопку
       return false;
 
     case CHECKLIST_STEPS.WAITING_FOR_NAME:
       state.data.name = text;
+      state.step = CHECKLIST_STEPS.WAITING_FOR_ORGANIZATION;
+      await ctx.reply('Укажите название вашей организации:');
+      return true;
+
+    case CHECKLIST_STEPS.WAITING_FOR_ORGANIZATION:
+      state.data.organization = text;
       state.step = CHECKLIST_STEPS.WAITING_FOR_PHONE;
       await ctx.reply('Укажите ваш номер телефона:');
       return true;
 
     case CHECKLIST_STEPS.WAITING_FOR_PHONE:
       state.data.phone = text;
-      
-      // Отправляем финальное сообщение и PDF
-      await ctx.reply(
-        '✅ Направляем вам упрощённый чек-лист первичной самопроверки.\n' +
-        'Он позволяет оценить базовые требования и организации процессов.'
-      );
-
-      // Отправляем PDF (путь нужно будет настроить)
-      try {
-        const pdfPath = join(__dirname, 'Чек-лист ХАССП.pdf');
-        await ctx.replyWithDocument({
-          source: readFileSync(pdfPath),
-          filename: 'Чек-лист ХАССП.pdf'
-        });
-      } catch (e) {
-        console.error('Ошибка при отправке PDF:', e);
-        await ctx.reply('⚠️ Файл чек-листа временно недоступен. Пожалуйста, свяжитесь с администратором.');
+      // Переход к шагу с объектами
+      state.step = CHECKLIST_STEPS.WAITING_FOR_OBJECTS;
+      if (!Array.isArray(state.data.objects)) {
+        state.data.objects = [];
       }
-
-      // Отправляем сообщение с предложением консультации
       await ctx.reply(
-        'Если вам необходим <b>внешний выездной аудит, документирование всех стадий и процедур и обучение персонала</b>, мы готовы провести бесплатную консультацию и рассказать, какие решения подойдут именно для вашего предприятия.',
-        {
-          parse_mode: 'HTML',
-          reply_markup: Markup.inlineKeyboard([
-            [Markup.button.callback('👉 Получить бесплатную консультацию', 'request_consultation')]
-          ]).reply_markup
-        }
+        'С какими объектами вы работаете чаще всего?\n\n' +
+        'Можно выбрать несколько вариантов.',
+        Markup.inlineKeyboard([
+          [Markup.button.callback('Промышленные предприятия', 'kit_obj_industrial')],
+          [Markup.button.callback('Энергетика / ТЭЦ / заводы', 'kit_obj_energy')],
+          [Markup.button.callback('Офисы и бизнес-центры', 'kit_obj_office')],
+          [Markup.button.callback('Торговые центры', 'kit_obj_mall')],
+          [Markup.button.callback('Медицинские центры', 'kit_obj_med')],
+          [Markup.button.callback('Бюджетные учреждения', 'kit_obj_budget')],
+          [Markup.button.callback('Свой ответ', 'kit_obj_other')],
+          [Markup.button.callback('➡️ Готово', 'kit_objects_done')]
+        ])
       );
+      return true;
 
-      // Отправляем данные админу
-      const adminMessage = 
-        '📋 Новая заявка на чек-лист:\n\n' +
-        `🏢 Компания: ${state.data.company}\n` +
-        `📋 Формат: ${state.data.format}\n` +
-        `📊 Этап: ${state.data.stage}\n` +
-        `✅ Готовность: ${state.data.readiness}\n` +
-        `👤 ФИО: ${state.data.name}\n` +
-        `📞 Телефон: ${state.data.phone}\n` +
-        `👤 Username: @${ctx.from.username || 'не указан'}`;
-
-      try {
-        await bot.telegram.sendMessage(ADMIN_ID, adminMessage);
-      } catch (e) {
-        console.error('Ошибка при отправке сообщения админу:', e);
+    case CHECKLIST_STEPS.WAITING_FOR_OBJECTS_OTHER:
+      if (!Array.isArray(state.data.objects)) {
+        state.data.objects = [];
       }
-      
-      // Сохраняем данные пользователя для возможного запроса консультации
-      lastChecklistData.set(userId, {
-        company: state.data.company,
-        format: state.data.format,
-        stage: state.data.stage,
-        readiness: state.data.readiness,
-        name: state.data.name,
-        phone: state.data.phone,
-        username: ctx.from.username || 'не указан'
-      });
-      
-      // Очищаем состояние
-      userStates.delete(userId);
+      if (text.trim()) {
+        state.data.objects.push(text.trim());
+      }
+      state.step = CHECKLIST_STEPS.WAITING_FOR_OBJECTS;
+      await ctx.reply(
+        'Спасибо! Можете выбрать дополнительные варианты из списка выше\n' +
+        'и нажать «➡️ Готово», когда закончите выбор.'
+      );
+      return true;
+
+    case CHECKLIST_STEPS.WAITING_FOR_PROBLEMS_OTHER:
+      if (!Array.isArray(state.data.problems)) {
+        state.data.problems = [];
+      }
+      if (text.trim()) {
+        state.data.problems.push(text.trim());
+      }
+      state.step = CHECKLIST_STEPS.WAITING_FOR_PROBLEMS;
+      await ctx.reply(
+        'Спасибо! Можете выбрать дополнительные варианты из списка выше\n' +
+        'и нажать «➡️ Готово», когда закончите выбор.'
+      );
       return true;
 
     default:
@@ -273,18 +229,18 @@ async function handleChecklistResponse(ctx) {
 bot.start((ctx) => {
   const payload = ctx.startPayload
 
-  if (payload === 'checklist') {
+  if (payload === 'kit') {
     startChecklistForm(ctx)
-  } else if (payload === 'audit') {
+  } else if (payload === 'consultation') {
     startAuditForm(ctx)
   }
 })
 
-bot.command('checklist', async (ctx) => {
+bot.command('kit', async (ctx) => {
   startChecklistForm(ctx)
 })
 
-bot.command('audit', async (ctx) => {
+bot.command('consultation', async (ctx) => {
   startAuditForm(ctx)
 })
 
@@ -296,7 +252,7 @@ bot.command('myid', async (ctx) => {
   }
 });
 
-// Обработчик кнопки "Начать" для чек-листа
+// Обработчик кнопки "Получить набор средств" (старт анкеты)
 bot.action('checklist_start', async (ctx) => {
   const userId = ctx.from.id;
   const state = userStates.get(userId);
@@ -306,7 +262,7 @@ bot.action('checklist_start', async (ctx) => {
     return;
   }
   
-  state.step = CHECKLIST_STEPS.WAITING_FOR_COMPANY;
+  state.step = CHECKLIST_STEPS.WAITING_FOR_NAME;
   
   // Убираем кнопки из предыдущего сообщения
   try {
@@ -316,217 +272,347 @@ bot.action('checklist_start', async (ctx) => {
   }
   
   await ctx.answerCbQuery();
-  await ctx.reply('Укажите название вашей компании:');
+  await ctx.reply('Укажите вашу фамилию и имя:');
 });
 
-// Обработчики выбора формата для чек-листа
-bot.action('format_cafe', async (ctx) => {
-  await handleFormatSelection(ctx, 'Кафе / ресторан');
+// Обработчики выбора объектов (множественный выбор)
+bot.action('kit_obj_industrial', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Промышленные предприятия');
 });
 
-bot.action('format_bar', async (ctx) => {
-  await handleFormatSelection(ctx, 'Бар / кофейня');
+bot.action('kit_obj_energy', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Энергетика / ТЭЦ / заводы');
 });
 
-bot.action('format_canteen', async (ctx) => {
-  await handleFormatSelection(ctx, 'Столовая');
+bot.action('kit_obj_office', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Офисы и бизнес-центры');
 });
 
-bot.action('format_bakery', async (ctx) => {
-  await handleFormatSelection(ctx, 'Пекарня / кулинария');
+bot.action('kit_obj_mall', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Торговые центры');
 });
 
-bot.action('format_production', async (ctx) => {
-  await handleFormatSelection(ctx, 'Производственная кухня');
+bot.action('kit_obj_med', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Медицинские центры');
 });
 
-bot.action('format_other', async (ctx) => {
+bot.action('kit_obj_budget', async (ctx) => {
+  await handleKitObjectsSelection(ctx, 'Бюджетные учреждения');
+});
+
+bot.action('kit_obj_other', async (ctx) => {
   const userId = ctx.from.id;
   const state = userStates.get(userId);
-  
+
   if (!state || state.type !== FORM_TYPES.CHECKLIST) {
     await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
     return;
   }
-  
-  state.step = CHECKLIST_STEPS.WAITING_FOR_FORMAT_OTHER;
-  
-  // Получаем текст исходного сообщения
-  const originalText = ctx.callbackQuery.message.text || 'Какой у вас формат?';
-  
-  // Редактируем сообщение, добавляя выбранный ответ и убирая кнопки
-  await ctx.editMessageText(
-    `${originalText}\n✅ Другое`,
-    { reply_markup: { inline_keyboard: [] } }
-  );
-  
+
+  state.step = CHECKLIST_STEPS.WAITING_FOR_OBJECTS_OTHER;
   await ctx.answerCbQuery();
-  await ctx.reply('Укажите ваш формат:');
+  await ctx.reply('Напишите свой вариант объектов, с которыми вы работаете чаще всего:');
 });
 
-async function handleFormatSelection(ctx, format) {
+async function handleKitObjectsSelection(ctx, label) {
   const userId = ctx.from.id;
   const state = userStates.get(userId);
-  
-  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
-    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST || state.step !== CHECKLIST_STEPS.WAITING_FOR_OBJECTS) {
+    await ctx.answerCbQuery('Пожалуйста, следуйте шагам анкеты последовательно.');
     return;
   }
-  
-  state.data.format = format;
-  state.step = CHECKLIST_STEPS.WAITING_FOR_STAGE;
-  
-  // Получаем текст исходного сообщения
-  const originalText = ctx.callbackQuery.message.text || 'Какой у вас формат?';
-  
-  // Редактируем сообщение, добавляя выбранный ответ и убирая кнопки
-  await ctx.editMessageText(
-    `${originalText}\n✅ ${format}`,
-    { reply_markup: { inline_keyboard: [] } }
-  );
-  
-  await ctx.answerCbQuery();
-  
-  // Отправляем новый вопрос
-  await ctx.reply(
-    'На каком этапе вы сейчас?',
-    Markup.inlineKeyboard([
-      [Markup.button.callback('Работаем, были проверки', 'stage_working_checked')],
-      [Markup.button.callback('Работаем, проверок не было', 'stage_working_unchecked')],
-      [Markup.button.callback('Открытие / запуск', 'stage_opening')],
-      [Markup.button.callback('Получали предписание', 'stage_warning')]
-    ])
-  );
-}
 
-// Обработчики выбора этапа для чек-листа
-bot.action('stage_working_checked', async (ctx) => {
-  await handleStageSelection(ctx, 'Работаем, были проверки');
-});
-
-bot.action('stage_working_unchecked', async (ctx) => {
-  await handleStageSelection(ctx, 'Работаем, проверок не было');
-});
-
-bot.action('stage_opening', async (ctx) => {
-  await handleStageSelection(ctx, 'Открытие / запуск');
-});
-
-bot.action('stage_warning', async (ctx) => {
-  await handleStageSelection(ctx, 'Получали предписание');
-});
-
-async function handleStageSelection(ctx, stage) {
-  const userId = ctx.from.id;
-  const state = userStates.get(userId);
-  
-  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
-    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
-    return;
+  if (!Array.isArray(state.data.objects)) {
+    state.data.objects = [];
   }
-  
-  state.data.stage = stage;
-  state.step = CHECKLIST_STEPS.WAITING_FOR_READINESS;
-  
-  // Получаем текст исходного сообщения
-  const originalText = ctx.callbackQuery.message.text || 'На каком этапе вы сейчас?';
-  
-  // Редактируем сообщение, добавляя выбранный ответ и убирая кнопки
-  await ctx.editMessageText(
-    `${originalText}\n✅ ${stage}`,
-    { reply_markup: { inline_keyboard: [] } }
-  );
-  
-  await ctx.answerCbQuery();
-  
-  // Отправляем новый вопрос
-  await ctx.reply(
-    'Как вы оцениваете готовность предприятия к проверке?',
-    Markup.inlineKeyboard([
-      [Markup.button.callback('Уверены, всё в порядке', 'readiness_confident')],
-      [Markup.button.callback('Есть сомнения', 'readiness_doubts')],
-      [Markup.button.callback('Скорее не готовы', 'readiness_not_ready')]
-    ])
-  );
-}
-
-// Обработчики выбора готовности для чек-листа
-bot.action('readiness_confident', async (ctx) => {
-  await handleReadinessSelection(ctx, 'Уверены, всё в порядке');
-});
-
-bot.action('readiness_doubts', async (ctx) => {
-  await handleReadinessSelection(ctx, 'Есть сомнения');
-});
-
-bot.action('readiness_not_ready', async (ctx) => {
-  await handleReadinessSelection(ctx, 'Скорее не готовы');
-});
-
-async function handleReadinessSelection(ctx, readiness) {
-  const userId = ctx.from.id;
-  const state = userStates.get(userId);
-  
-  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
-    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
-    return;
-  }
-  
-  state.data.readiness = readiness;
-  state.step = CHECKLIST_STEPS.WAITING_FOR_NAME;
-  
-  // Получаем текст исходного сообщения
-  const originalText = ctx.callbackQuery.message.text || 'Как вы оцениваете готовность предприятия к проверке?';
-  
-  // Редактируем сообщение, добавляя выбранный ответ и убирая кнопки
-  await ctx.editMessageText(
-    `${originalText}\n✅ ${readiness}`,
-    { reply_markup: { inline_keyboard: [] } }
-  );
-  
-  await ctx.answerCbQuery();
-  
-  // Отправляем новый вопрос
-  await ctx.reply('Укажите ваше имя и фамилию:');
-}
-
-// Обработчик запроса бесплатной консультации
-bot.action('request_consultation', async (ctx) => {
-  const userId = ctx.from.id;
-  
-  // Отправляем подтверждение пользователю
-  await ctx.answerCbQuery('✅ Заявка отправлена!');
-  await ctx.reply('✅ Спасибо! Ваша заявка на бесплатную консультацию отправлена. Мы свяжемся с вами в ближайшее время.');
-
-  // Получаем данные пользователя из последней заявки на чек-лист
-  const checklistData = lastChecklistData.get(userId);
-  
-  // Отправляем уведомление админу
-  let adminMessage = '📞 Новая заявка на бесплатную консультацию:\n\n';
-  
-  if (checklistData) {
-    // Если есть данные из чек-листа, используем их
-    adminMessage += 
-      `🏢 Компания: ${checklistData.company}\n` +
-      `📋 Формат: ${checklistData.format}\n` +
-      `📊 Этап: ${checklistData.stage}\n` +
-      `✅ Готовность: ${checklistData.readiness}\n` +
-      `👤 ФИО: ${checklistData.name}\n` +
-      `📞 Телефон: ${checklistData.phone}\n` +
-      `👤 Username: @${checklistData.username}`;
+  const index = state.data.objects.indexOf(label);
+  let actionText;
+  if (index === -1) {
+    state.data.objects.push(label);
+    actionText = `Добавлено: ${label}`;
   } else {
-    // Если данных нет, отправляем базовую информацию
-    adminMessage += 
-      `👤 Username: @${ctx.from.username || 'не указан'}\n` +
-      `🆔 User ID: ${userId}\n` +
-      `👤 Имя: ${ctx.from.first_name || 'не указано'} ${ctx.from.last_name || ''}`.trim();
+    state.data.objects.splice(index, 1);
+    actionText = `Убрано: ${label}`;
   }
+
+  const selected = new Set(state.data.objects);
+
+  const keyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`${selected.has('Промышленные предприятия') ? '✅ ' : ''}Промышленные предприятия`, 'kit_obj_industrial')],
+    [Markup.button.callback(`${selected.has('Энергетика / ТЭЦ / заводы') ? '✅ ' : ''}Энергетика / ТЭЦ / заводы`, 'kit_obj_energy')],
+    [Markup.button.callback(`${selected.has('Офисы и бизнес-центры') ? '✅ ' : ''}Офисы и бизнес-центры`, 'kit_obj_office')],
+    [Markup.button.callback(`${selected.has('Торговые центры') ? '✅ ' : ''}Торговые центры`, 'kit_obj_mall')],
+    [Markup.button.callback(`${selected.has('Медицинские центры') ? '✅ ' : ''}Медицинские центры`, 'kit_obj_med')],
+    [Markup.button.callback(`${selected.has('Бюджетные учреждения') ? '✅ ' : ''}Бюджетные учреждения`, 'kit_obj_budget')],
+    [Markup.button.callback('Свой ответ', 'kit_obj_other')],
+    [Markup.button.callback('➡️ Готово', 'kit_objects_done')]
+  ]);
+
+  try {
+    await ctx.editMessageReplyMarkup(keyboard.reply_markup);
+  } catch (e) {
+    // если не удалось изменить (например, старое сообщение) — просто игнорируем
+  }
+
+  await ctx.answerCbQuery(actionText);
+}
+
+// Завершение выбора объектов
+bot.action('kit_objects_done', async (ctx) => {
+  const userId = ctx.from.id;
+  const state = userStates.get(userId);
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
+    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
+    return;
+  }
+
+  if (!Array.isArray(state.data.objects) || state.data.objects.length === 0) {
+    await ctx.answerCbQuery('Пожалуйста, выберите хотя бы один вариант или укажите свой ответ.');
+    return;
+  }
+
+  // Отдельным сообщением фиксируем выбранные ответы
+  const objectsSummary =
+    'С какими объектами вы работаете чаще всего?\n' +
+    state.data.objects.map((o) => `🟢 ${o}`).join('\n');
+  await ctx.reply(objectsSummary);
+
+  state.step = CHECKLIST_STEPS.WAITING_FOR_SCALE;
+
+  try {
+    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
+  } catch (e) {
+    // игнорируем, если уже изменено
+  }
+
+  await ctx.answerCbQuery();
+  await ctx.reply(
+    'Примерный масштаб по площади объекта?',
+    Markup.inlineKeyboard([
+      [Markup.button.callback('Небольшие объекты', 'kit_scale_small')],
+      [Markup.button.callback('Средние объёмы', 'kit_scale_medium')],
+      [Markup.button.callback('Крупные объекты', 'kit_scale_large')]
+    ])
+  );
+});
+
+// Масштаб объектов
+bot.action('kit_scale_small', async (ctx) => {
+  await handleKitScaleSelection(ctx, 'Небольшие объекты');
+});
+
+bot.action('kit_scale_medium', async (ctx) => {
+  await handleKitScaleSelection(ctx, 'Средние объёмы');
+});
+
+bot.action('kit_scale_large', async (ctx) => {
+  await handleKitScaleSelection(ctx, 'Крупные объекты');
+});
+
+async function handleKitScaleSelection(ctx, label) {
+  const userId = ctx.from.id;
+  const state = userStates.get(userId);
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST || state.step !== CHECKLIST_STEPS.WAITING_FOR_SCALE) {
+    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
+    return;
+  }
+
+  state.data.scale = label;
+  state.step = CHECKLIST_STEPS.WAITING_FOR_PROBLEMS;
+
+  try {
+    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
+  } catch (e) {
+    // игнорируем
+  }
+
+  await ctx.answerCbQuery();
+  if (!Array.isArray(state.data.problems)) {
+    state.data.problems = [];
+  }
+
+  // Фиксируем выбранный ответ отдельным сообщением
+  await ctx.reply(
+    'Примерный масштаб по площади объекта?\n' +
+    `🟢 ${label}`
+  );
+
+  await ctx.reply(
+    'С какими проблемами сложнее всего сейчас справляться?\n\n' +
+    'Можно выбрать несколько вариантов.',
+    Markup.inlineKeyboard([
+      [Markup.button.callback('Жировые и масляные загрязнения', 'kit_prob_grease')],
+      [Markup.button.callback('Производственные загрязнения', 'kit_prob_industrial')],
+      [Markup.button.callback('Сильные загрязнения полов', 'kit_prob_floor')],
+      [Markup.button.callback('Санузлы и сантехника', 'kit_prob_wc')],
+      [Markup.button.callback('Налёты, известь, ржавчина', 'kit_prob_scale')],
+      [Markup.button.callback('После строительных работ', 'kit_prob_postbuild')],
+      [Markup.button.callback('Большой расход бумажной продукции', 'kit_prob_paper')],
+      [Markup.button.callback('Высокие затраты на моющие средства', 'kit_prob_cost')],
+      [Markup.button.callback('Свой ответ', 'kit_prob_other')],
+      [Markup.button.callback('➡️ Готово', 'kit_problems_done')]
+    ])
+  );
+}
+
+// Обработчики выбора проблем (множественный выбор)
+bot.action('kit_prob_grease', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Жировые и масляные загрязнения');
+});
+
+bot.action('kit_prob_industrial', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Производственные загрязнения');
+});
+
+bot.action('kit_prob_floor', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Сильные загрязнения полов');
+});
+
+bot.action('kit_prob_wc', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Санузлы и сантехника');
+});
+
+bot.action('kit_prob_scale', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Налёты, известь, ржавчина');
+});
+
+bot.action('kit_prob_postbuild', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'После строительных работ');
+});
+
+bot.action('kit_prob_paper', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Большой расход бумажной продукции');
+});
+
+bot.action('kit_prob_cost', async (ctx) => {
+  await handleKitProblemsSelection(ctx, 'Высокие затраты на моющие средства');
+});
+
+bot.action('kit_prob_other', async (ctx) => {
+  const userId = ctx.from.id;
+  const state = userStates.get(userId);
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
+    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
+    return;
+  }
+
+  state.step = CHECKLIST_STEPS.WAITING_FOR_PROBLEMS_OTHER;
+  await ctx.answerCbQuery();
+  await ctx.reply('Опишите своими словами, с какими проблемами сложнее всего сейчас справляться:');
+});
+
+async function handleKitProblemsSelection(ctx, label) {
+  const userId = ctx.from.id;
+  const state = userStates.get(userId);
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST || state.step !== CHECKLIST_STEPS.WAITING_FOR_PROBLEMS) {
+    await ctx.answerCbQuery('Пожалуйста, следуйте шагам анкеты последовательно.');
+    return;
+  }
+
+  if (!Array.isArray(state.data.problems)) {
+    state.data.problems = [];
+  }
+
+  const index = state.data.problems.indexOf(label);
+  let actionText;
+  if (index === -1) {
+    state.data.problems.push(label);
+    actionText = `Добавлено: ${label}`;
+  } else {
+    state.data.problems.splice(index, 1);
+    actionText = `Убрано: ${label}`;
+  }
+
+  const selected = new Set(state.data.problems);
+
+  const keyboard = Markup.inlineKeyboard([
+    [Markup.button.callback(`${selected.has('Жировые и масляные загрязнения') ? '✅ ' : ''}Жировые и масляные загрязнения`, 'kit_prob_grease')],
+    [Markup.button.callback(`${selected.has('Производственные загрязнения') ? '✅ ' : ''}Производственные загрязнения`, 'kit_prob_industrial')],
+    [Markup.button.callback(`${selected.has('Сильные загрязнения полов') ? '✅ ' : ''}Сильные загрязнения полов`, 'kit_prob_floor')],
+    [Markup.button.callback(`${selected.has('Санузлы и сантехника') ? '✅ ' : ''}Санузлы и сантехника`, 'kit_prob_wc')],
+    [Markup.button.callback(`${selected.has('Налёты, известь, ржавчина') ? '✅ ' : ''}Налёты, известь, ржавчина`, 'kit_prob_scale')],
+    [Markup.button.callback(`${selected.has('После строительных работ') ? '✅ ' : ''}После строительных работ`, 'kit_prob_postbuild')],
+    [Markup.button.callback(`${selected.has('Большой расход бумажной продукции') ? '✅ ' : ''}Большой расход бумажной продукции`, 'kit_prob_paper')],
+    [Markup.button.callback(`${selected.has('Высокие затраты на моющие средства') ? '✅ ' : ''}Высокие затраты на моющие средства`, 'kit_prob_cost')],
+    [Markup.button.callback('Свой ответ', 'kit_prob_other')],
+    [Markup.button.callback('➡️ Готово', 'kit_problems_done')]
+  ]);
+
+  try {
+    await ctx.editMessageReplyMarkup(keyboard.reply_markup);
+  } catch (e) {
+    // игнорируем ошибку изменения старого сообщения
+  }
+
+  await ctx.answerCbQuery(actionText);
+}
+
+// Завершение выбора проблем и завершение анкеты по набору средств
+bot.action('kit_problems_done', async (ctx) => {
+  const userId = ctx.from.id;
+  const state = userStates.get(userId);
+
+  if (!state || state.type !== FORM_TYPES.CHECKLIST) {
+    await ctx.answerCbQuery('Сессия истекла. Пожалуйста, начните заново.');
+    return;
+  }
+
+  if (!Array.isArray(state.data.problems) || state.data.problems.length === 0) {
+    await ctx.answerCbQuery('Пожалуйста, выберите хотя бы один вариант или укажите свой ответ.');
+    return;
+  }
+
+  try {
+    await ctx.editMessageReplyMarkup({ inline_keyboard: [] });
+  } catch (e) {
+    // игнорируем
+  }
+
+  await ctx.answerCbQuery();
+
+  // Отдельным сообщением фиксируем выбранные ответы
+  const problemsSummary =
+    'С какими проблемами сложнее всего сейчас справляться?\n' +
+    state.data.problems.map((p) => `🟢 ${p}`).join('\n');
+  await ctx.reply(problemsSummary);
+
+  // Сообщения по шагам 8 и 9
+  await ctx.reply(
+    'На основе ваших ответов мы подберём\n' +
+    'набор профессиональных средств,\n' +
+    'чтобы вы могли проверить эффективность\n' +
+    'на своих объектах, а не «на словах».'
+  );
+
+  await ctx.reply(
+    '✅ Спасибо.\n' +
+    'Наш специалист свяжется с вами\n' +
+    'и подтвердит состав набора.'
+  );
+
+  // Сообщение админу
+  const adminMessage =
+    '📦 Новая заявка на набор средств:\n\n' +
+    `👤 ФИО: ${state.data.name}\n` +
+    `🏢 Организация: ${state.data.organization}\n` +
+    `📞 Телефон: ${state.data.phone}\n` +
+    `🏗 Объекты: ${Array.isArray(state.data.objects) ? state.data.objects.join(', ') : 'не указаны'}\n` +
+    `📐 Масштаб: ${state.data.scale || 'не указан'}\n` +
+    `⚙️ Проблемы: ${Array.isArray(state.data.problems) ? state.data.problems.join(', ') : 'не указаны'}\n` +
+    `👤 Username: @${ctx.from.username || 'не указан'}`;
 
   try {
     await bot.telegram.sendMessage(ADMIN_ID, adminMessage);
   } catch (e) {
     console.error('Ошибка при отправке сообщения админу:', e);
   }
+
+  userStates.delete(userId);
 });
 
 // Обработчик согласия на обработку персональных данных
@@ -544,21 +630,21 @@ bot.action('pd_agreement_accept', async (ctx) => {
     state.step = CHECKLIST_STEPS.WAITING_FOR_START;
     await ctx.answerCbQuery('Спасибо за согласие!');
     await ctx.editMessageText(
-      'Мы подготовили короткий чек-лист, который поможет понять,\n' +
-      'готова ли ваша кухня к проверке.\n' +
-      'Ответьте на несколько вопросов — и вы получите его бесплатно.'
+      'Вы можете получить бесплатный набор профессиональной химии,\n' +
+      'подобранный под ваши объекты и задачи клининга.\n\n' +
+      'Ответьте на несколько вопросов — это займёт не более 1 минуты.'
     );
     await ctx.reply(
-      'Нажмите кнопку "Начать" для продолжения.',
+      'Для продолжения нажмите кнопку ниже.',
       Markup.inlineKeyboard([
-        [Markup.button.callback('Начать', 'checklist_start')]
+        [Markup.button.callback('👉 Получить набор средств', 'checklist_start')]
       ])
     );
   } else if (state.type === FORM_TYPES.AUDIT) {
     state.step = AUDIT_STEPS.WAITING_FOR_NAME;
     await ctx.answerCbQuery('Спасибо за согласие!');
     await ctx.editMessageText(
-      'Для оформления заявки на аудит, пожалуйста, заполните следующие данные:'
+      'Для оформления заявки на консультацию, пожалуйста, заполните следующие данные:'
     );
     await ctx.reply('Укажите вашу фамилию и имя:');
   }
