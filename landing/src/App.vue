@@ -15,8 +15,8 @@
     <main>
       <section class="py-12 lg:py-24 bg-gradient-to-r max-md:bg-gradient-to-b from-[var(--color-brand-1)] to-[var(--color-brand-2)]">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px]">
-          <div class="grid md:grid-cols-2 gap-8 lg:gap-14 items-center">
-            <div>
+          <div class="flex gap-8 lg:gap-14 items-center">
+            <div class="w-[650px] min-w-[650px] max-lg:w-[50%] max-lg:min-w-[50%] max-md:w-full max-md:min-w-full">
               <h1 class="text-[35px] lg:text-[72px] leading-[130%] font-bold text-white mb-6">
                 Снижаем расход клининговых компаний <span class="text-[var(--color-brand-1)] bg-white px-2">до&nbsp;30%</span>
               </h1>
@@ -44,7 +44,7 @@
               <img 
                 src="/hero-vector.svg" 
                 alt="Логотип компании" 
-                class="w-[500px]"
+                class="w-[100%]"
               />
             </div>
           </div>
@@ -96,6 +96,81 @@
         </div>
       </section>
 
+      <!-- Best Sellers Section -->
+      <section class="py-12 lg:py-24 bg-[#F4F4F4]">
+        <div class="max-w-[1440px] mx-auto">
+          <div class="px-4 md:px-10 lg:px-[40px]">
+            <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-center text-[#1E1E1E] mb-12">
+              Хиты продаж
+            </h2>
+          </div>
+          <!-- Swiper для мобильных и планшетов, grid для десктопов -->
+          <div class="xl:hidden relative px-4 md:px-10 lg:px-[40px]">
+            <swiper
+              :slides-per-view="1"
+              :space-between="24"
+              :modules="[Navigation]"
+              :navigation="{
+                nextEl: '.swiper-button-next-custom',
+                prevEl: '.swiper-button-prev-custom'
+              }"
+              :breakpoints="{
+                640: {
+                  slidesPerView: 1.5,
+                  spaceBetween: 24
+                },
+                768: {
+                  slidesPerView: 2,
+                  spaceBetween: 24
+                },
+                1024: {
+                  slidesPerView: 3,
+                  spaceBetween: 32
+                }
+              }"
+              class="best-sellers-swiper"
+            >
+              <swiper-slide v-for="product in products" :key="product.id">
+                <div class="bg-white rounded-3xl lg:rounded-[24px] p-6 flex flex-col h-full">
+                  <div class="w-full h-[200px] mb-4 rounded-2xl overflow-hidden bg-white flex items-center justify-center relative">
+                    <img :src="product.image" :alt="product.title" class="w-full h-full object-contain">
+                    <span v-if="product.badge" class="absolute top-2 right-2 bg-[var(--color-brand-1)] text-white text-xs font-semibold px-3 py-1 rounded-full">{{ product.badge }}</span>
+                  </div>
+                  <h3 class="text-lg lg:text-xl font-medium leading-[130%] text-[#1E1E1E] mb-2">
+                    {{ product.title }}
+                  </h3>
+                  <p class="text-2xl lg:text-3xl font-bold leading-[120%] text-[#1E1E1E] mt-auto">
+                    {{ product.price }} <span v-if="product.priceNote" class="text-base lg:text-lg font-normal">{{ product.priceNote }}</span>
+                  </p>
+                </div>
+              </swiper-slide>
+            </swiper>
+            <!-- Кастомные стрелки навигации -->
+            <button class="swiper-button-prev-custom absolute left-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-[var(--color-brand-1)] hover:text-white transition-colors text-[#1E1E1E]">
+              <i class="bi bi-chevron-left text-2xl"></i>
+            </button>
+            <button class="swiper-button-next-custom absolute right-0 top-1/2 -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-white shadow-lg flex items-center justify-center hover:bg-[var(--color-brand-1)] hover:text-white transition-colors text-[#1E1E1E]">
+              <i class="bi bi-chevron-right text-2xl"></i>
+            </button>
+          </div>
+          <!-- Grid для широких экранов (xl и выше) -->
+          <div class="hidden xl:grid xl:grid-cols-5 gap-8 px-4 md:px-10 lg:px-[40px]">
+            <div v-for="product in products" :key="product.id" class="bg-white rounded-3xl lg:rounded-[24px] p-6 flex flex-col">
+              <div class="w-full h-[200px] mb-4 rounded-2xl overflow-hidden bg-white flex items-center justify-center relative">
+                <img :src="product.image" :alt="product.title" class="w-full h-full object-contain">
+                <span v-if="product.badge" class="absolute top-2 right-2 bg-[var(--color-brand-1)] text-white text-xs font-semibold px-3 py-1 rounded-full">{{ product.badge }}</span>
+              </div>
+              <h3 class="text-lg lg:text-xl font-medium leading-[130%] text-[#1E1E1E] mb-2">
+                {{ product.title }}
+              </h3>
+              <p class="text-2xl lg:text-3xl font-bold leading-[120%] text-[#1E1E1E] mt-auto">
+                {{ product.price }} <span v-if="product.priceNote" class="text-base lg:text-lg font-normal">{{ product.priceNote }}</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section class="py-12 lg:py-24 bg-[#F4F4F4] bg-[url('/shape.svg')] bg-no-repeat bg-size-[50%_50%] bg-position-[150%_100%]">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] flex flex-col items-center">
           <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-center text-[#1E1E1E] mb-12">
@@ -144,10 +219,10 @@
           </div>
 
           <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full">
+            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
               Получить консультацию
             </a>
-            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white">
+            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white text-center">
               Бесплатный набор под вашу компанию
               <svg class="hidden lg:block min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
@@ -159,13 +234,13 @@
 
       <!-- Solution / Partners Section -->
       <section class="py-12 lg:py-24 bg-white">
-        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] flex items-center gap-10 max-md:flex-col">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] flex gap-10 max-md:flex-col">
           <div class="w-[50%] max-md:w-full">
-            <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-[#1E1E1E] mb-8">
+            <h2 class="text-[32px] lg:text-[48px] font-bold leading-[120%] text-[#1E1E1E] mb-8">
               Официальный дистрибьютор сертифицированных производителей
             </h2>
             <p class="text-xl lg:text-2xl font-medium leading-[140%] text-[#1E1E1E] max-w-4xl mb-10">
-              Мы сотрудничаем с ведущими заводами России по производству профессиональной моющей химии
+              Мы сотрудничаем с ведущими заводами России <span class="max-md:hidden inline">по производству профессиональной моющей химии</span>
             </p>
           </div>
           <div class="flex flex-col gap-5 lg:gap-6 w-[50%] max-md:w-full">
@@ -225,10 +300,10 @@
           </div>
 
           <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[72px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-12 lg:px-7 text-2xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-md:w-full">
+            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
               Получить консультацию
             </a>
-            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white">
+            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white text-center">
               Бесплатный набор под вашу компанию
               <svg class="hidden lg:block min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
@@ -262,6 +337,10 @@
 
 <script setup>
 import { ref } from 'vue'
+import { Swiper, SwiperSlide } from 'swiper/vue'
+import { Navigation } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/navigation'
 
 const selectedCertificate = ref(null)
 
@@ -274,11 +353,83 @@ const closeCertificate = () => {
   selectedCertificate.value = null
   document.body.style.overflow = ''
 }
+
+const products = [
+  {
+    id: 1,
+    title: 'Листовые полотенца V-укладки PROTissue C192',
+    price: '72,12 ₽',
+    priceNote: 'за пачку',
+    image: '/tissues.png',
+    badge: null
+  },
+  {
+    id: 2,
+    title: 'Бумага туалетная СЕРАЯ 200м однослойная',
+    price: '59 ₽',
+    priceNote: null,
+    image: '/toilet-paper.jpg',
+    badge: null
+  },
+  {
+    id: 3,
+    title: 'MP Prof+ PROSEPT 5л средство усиленного действия для мытья полов',
+    price: '1 359 ₽',
+    priceNote: null,
+    image: '/mp-prof.png',
+    badge: null
+  },
+  {
+    id: 4,
+    title: 'МОП 40см шубка 100% микрофибра МЕЛАНЖ',
+    price: '239 ₽',
+    priceNote: null,
+    image: '/mop.jpg',
+    badge: 'новинка'
+  },
+  {
+    id: 5,
+    title: 'BT Bath DEZ+ PROSEPT 5л ср-во для уборки с активным хлором',
+    price: '1 039 ₽',
+    priceNote: null,
+    image: '/bt-bath.png',
+    badge: null
+  }
+]
 </script>
 
 <style>
+  body {
+    overflow-x: hidden;
+  }
+  
   :root {
     --color-brand-1: #03A367;
     --color-brand-2: #009AB2;
+  }
+
+  .best-sellers-swiper {
+    padding-bottom: 20px;
+    overflow: visible;
+  }
+
+  .best-sellers-swiper .swiper-wrapper {
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .best-sellers-swiper .swiper-slide {
+    height: auto;
+  }
+
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    display: flex !important;
+  }
+
+  .swiper-button-prev-custom.swiper-button-disabled,
+  .swiper-button-next-custom.swiper-button-disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
   }
 </style>
