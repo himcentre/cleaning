@@ -3,11 +3,11 @@
     <!-- Header -->
     <header class="bg-white">
       <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] py-4 flex justify-between items-center">
-        <a href="https://himcentre.ru" target="_blank">
-          <img class="h-[50px] hidden md:block" src="/logo.svg" alt="Химэкоцентр">
+        <a href="https://himcentre.ru" target="_blank" class="hidden md:block">
+          <img class="h-[50px]" src="/logo.svg" alt="Химэкоцентр">
         </a>
-        <a href="https://himcentre.ru" target="_blank">
-          <img class="h-[50px] block md:hidden" src="/logo-mobile.svg" alt="Химэкоцентр">
+        <a href="https://himcentre.ru" target="_blank" class="block md:hidden">
+          <img class="h-[50px]" src="/logo-mobile.svg" alt="Химэкоцентр">
         </a>
         <a href="tel:+73952951966" class="inline-flex items-center justify-center gap-2.5 h-12 lg:h-9 rounded-3xl lg:rounded-[18px] px-6 lg:px-4 text-lg font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white">
           8 (3952) 951-966
@@ -101,7 +101,7 @@
       </section>
 
       <!-- Best Sellers Section -->
-      <section class="py-12 lg:py-24 bg-[#F4F4F4]">
+      <section class="py-12 lg:py-24 bg-[#F4F4F4] max-w-[100vw] overflow-x-hidden">
         <div class="max-w-[1440px] mx-auto">
           <div class="px-4 md:px-10 lg:px-[40px]">
             <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-center text-[#1E1E1E] mb-12">
@@ -409,10 +409,6 @@ const products = [
 </script>
 
 <style>
-  body {
-    overflow-x: hidden;
-  }
-  
   :root {
     --color-brand-1: #03A367;
     --color-brand-2: #009AB2;
