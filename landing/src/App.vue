@@ -3,8 +3,12 @@
     <!-- Header -->
     <header class="bg-white">
       <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] py-4 flex justify-between items-center">
-        <img class="h-[50px] hidden md:block" src="/logo.svg" alt="Химэкоцентр">
-        <img class="h-[50px] block md:hidden" src="/logo-mobile.svg" alt="Химэкоцентр">
+        <a href="https://himcentre.ru" target="_blank">
+          <img class="h-[50px] hidden md:block" src="/logo.svg" alt="Химэкоцентр">
+        </a>
+        <a href="https://himcentre.ru" target="_blank">
+          <img class="h-[50px] block md:hidden" src="/logo-mobile.svg" alt="Химэкоцентр">
+        </a>
         <a href="tel:+73952951966" class="inline-flex items-center justify-center gap-2.5 h-12 lg:h-9 rounded-3xl lg:rounded-[18px] px-6 lg:px-4 text-lg font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white">
           8 (3952) 951-966
         </a>
@@ -23,9 +27,9 @@
               <p class="text-xl lg:text-3xl font-medium leading-[120%] text-white mb-8">
                 Подберем моющие средства под объекты, чтобы вы <span class="font-bold">тратили меньше</span> и <span class="font-bold">зарабатывали больше</span>
               </p>
-              <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="text-center inline-flex items-center justify-center gap-2.5 py-4 rounded-[36px] lg:rounded-full px-6 lg:px-7 text-2xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white max-md:w-full">
+              <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="text-center inline-flex items-center justify-center gap-2.5 py-4 rounded-[36px] lg:rounded-full px-6 lg:px-7 text-base md:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white max-md:w-full">
                 Бесплатный набор под вашу компанию
-                <svg class="hidden lg:block min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
                 </svg>
               </a>
@@ -219,12 +223,15 @@
           </div>
 
           <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
+            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-base md:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
               Получить консультацию
+              <svg class="min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
+              </svg>
             </a>
-            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white text-center">
+            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-base md:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:from-[var(--color-brand-2)] hover:to-[var(--color-brand-1)] transition-colors max-lg:w-full [&_svg_path]:fill-white text-center">
               Бесплатный набор под вашу компанию
-              <svg class="hidden lg:block min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg class="min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
               </svg>
             </a>
@@ -273,39 +280,42 @@
 
       <!-- Clients Section -->
       <section class="py-12 lg:py-24 bg-[#F4F4F4]">
-        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px]">
-          <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-center text-[#1E1E1E] mb-6">
+        <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] flex flex-col items-center">
+          <h2 class="text-[32px] lg:text-[48px] font-medium leading-[120%] text-center text-[#1E1E1E] mb-12">
             Среди наших клиентов
           </h2>
 
-          <div class="grid grid-cols-6 max-md:grid-cols-3 gap-5 lg:gap-8 mb-24 max-md:mb-12">
-            <div class="rounded-2xl overflow-hidden">
+          <div class="grid grid-cols-[repeat(6,1fr)] max-md:grid-cols-[repeat(3,1fr)] gap-8 max-md:gap-4 mb-24 max-md:mb-12">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-ink.png" alt="ИНК" class="w-full h-full object-contain">
             </div>
-            <div class="rounded-2xl overflow-hidden">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-airport.png" alt="Аэропорт Иркутск" class="w-full h-full object-contain">
             </div>
-            <div class="rounded-2xl overflow-hidden">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-iraero.png" alt="ИрАэро" class="w-full h-full object-contain">
             </div>
-            <div class="rounded-2xl overflow-hidden">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-irkutskenergo.png" alt="Иркутскэнерго" class="w-full h-full object-contain">
             </div>
-            <div class="rounded-2xl overflow-hidden">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-igu.jpg" alt="ИрНИТУ" class="w-full h-full object-contain">
             </div>
-            <div class="rounded-2xl overflow-hidden">
+            <div class="rounded-lg overflow-hidden max-w-[100px]">
               <img src="/logo-alfa.png" alt="Альфа-Банк" class="w-full h-full object-contain">
             </div>
           </div>
 
           <div class="flex flex-wrap gap-4 justify-center">
-            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
+            <a href="https://t.me/HimcentreCleaningBot?start=consultation" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-base md:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-[#1E1E1E] text-white hover:bg-white hover:text-[#1E1E1E] [&_svg_path]:fill-white hover:[&_svg_path]:fill-[#1E1E1E] max-lg:w-full text-center">
               Получить консультацию
+              <svg class="min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
+              </svg>
             </a>
-            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-xl lg:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:opacity-80 transition-opacity max-lg:w-full [&_svg_path]:fill-white text-center">
+            <a href="https://t.me/HimcentreCleaningBot?start=kit" target="_blank" class="inline-flex items-center justify-center gap-2.5 h-[60px] lg:h-14 rounded-[36px] lg:rounded-[28px] px-10 lg:px-7 text-base md:text-xl font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-gradient-to-r from-[var(--color-brand-1)] to-[var(--color-brand-2)] text-white hover:from-[var(--color-brand-2)] hover:to-[var(--color-brand-1)] transition-colors max-lg:w-full [&_svg_path]:fill-white text-center">
               Бесплатный набор под вашу компанию
-              <svg class="hidden lg:block min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <svg class="min-w-[28px] ml-2" width="28" height="32" viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M27.9187 6.1625L23.6937 26.0875C23.375 27.4937 22.5437 27.8438 21.3625 27.1812L14.925 22.4375L11.8187 25.425C11.475 25.7687 11.1875 26.0562 10.525 26.0562L10.9875 19.5L22.9187 8.71875C23.4375 8.25625 22.8062 8 22.1125 8.4625L7.36246 17.75L1.01246 15.7625C-0.368794 15.3313 -0.393794 14.3813 1.29996 13.7188L26.1375 4.15C27.2875 3.71875 28.2937 4.40625 27.9187 6.1625Z"/>
               </svg>
             </a>
@@ -317,9 +327,9 @@
     <!-- Footer -->
     <footer class="-mt-6 lg:-mt-10 pt-6 pb-8 rounded-t-[24px] lg:rounded-t-[40px] bg-[#212429]">
       <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px] flex items-center justify-between max-[900px]:flex-col max-[900px]:justify-center max-[900px]:gap-6">
-        <div class="text-white text-base lg:text-xl font-medium leading-[120%] max-w-[186px]">
+        <a href="https://himcentre.ru" target="_blank" class="text-white text-base lg:text-xl font-medium leading-[120%] max-w-[186px]">
           <img src="/logo-white.svg" alt="Химэкоцентр">
-        </div>
+        </a>
         <div class="flex items-center gap-4 lg:gap-14 max-[900px]:flex-col max-[900px]:justify-center max-[900px]:items-start max-[900px]:gap-6">
           <a href="tel:+73952951966" class="text-white text-base lg:text-xl font-medium leading-[120%] hover:opacity-80 transition-opacity flex items-center gap-4">
             <div class="rounded-full bg-[#2e333c] p-3">
