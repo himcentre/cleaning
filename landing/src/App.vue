@@ -9,18 +9,18 @@
         <a href="https://himcentre.ru" target="_blank" class="block md:hidden">
           <img class="h-[50px]" src="/logo-mobile.svg" alt="Химэкоцентр">
         </a>
-        <a href="tel:+73952951966" class="inline-flex items-center justify-center gap-2.5 h-12 lg:h-9 rounded-3xl lg:rounded-[18px] px-6 lg:px-4 text-lg font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white">
-          8 (3952) 951-966
+        <a href="tel:+73952597939" class="inline-flex items-center justify-center gap-2.5 h-12 lg:h-9 rounded-3xl lg:rounded-[18px] px-6 lg:px-4 text-lg font-semibold leading-[120%] cursor-pointer transition-colors duration-200 bg-white text-[#1E1E1E] hover:bg-[#1E1E1E] hover:text-white [&_svg_path]:fill-[#1E1E1E] hover:[&_svg_path]:fill-white">
+          8 (3952) 59-79-39
         </a>
       </div>
     </header>
 
     <!-- Hero Section -->
     <main>
-      <section class="py-12 lg:py-24 bg-gradient-to-r max-md:bg-gradient-to-b from-[var(--color-brand-1)] to-[var(--color-brand-2)]">
+      <section class="bg-gradient-to-r max-md:bg-gradient-to-b from-[var(--color-brand-1)] to-[var(--color-brand-2)]">
         <div class="max-w-[1440px] mx-auto px-4 md:px-10 lg:px-[40px]">
           <div class="flex gap-8 lg:gap-14 items-center">
-            <div class="w-[650px] min-w-[650px] max-lg:w-[50%] max-lg:min-w-[50%] max-md:w-full max-md:min-w-full">
+            <div class="py-12 lg:py-24 w-[650px] min-w-[650px] max-lg:w-[50%] max-lg:min-w-[50%] max-md:w-full max-md:min-w-full">
               <h1 class="text-[35px] lg:text-[72px] leading-[130%] font-bold text-white mb-6">
                 Снижаем расход клининговых компаний <span class="text-[var(--color-brand-1)] bg-white px-2">до&nbsp;30%</span>
               </h1>
@@ -35,12 +35,17 @@
               </a>
               
             </div>
-            <div class="flex justify-center max-md:hidden">
+            <div class="flex justify-center max-md:hidden relative self-stretch">
               <img 
                 src="/hero-vector.svg" 
                 alt="Логотип компании" 
                 class="w-[100%]"
               />
+              <img 
+                src="/speaker.png" 
+                alt="Менеджер"
+                class="absolute bottom-0 right-0 w-[500px] hidden xl:block pointer-events-none"
+              >
             </div>
           </div>
         </div>
@@ -322,11 +327,11 @@
           <img src="/logo-white.svg" alt="Химэкоцентр">
         </a>
         <div class="flex items-center gap-4 lg:gap-14 max-[900px]:flex-col max-[900px]:justify-center max-[900px]:items-start max-[900px]:gap-6">
-          <a href="tel:+73952951966" class="text-white text-base lg:text-xl font-medium leading-[120%] hover:opacity-80 transition-opacity flex items-center gap-4">
+          <a href="tel:+73952597939" class="text-white text-base lg:text-xl font-medium leading-[120%] hover:opacity-80 transition-opacity flex items-center gap-4">
             <div class="rounded-full bg-[#2e333c] p-3">
               <img src="/phone-icon.svg" alt="Телефон">
             </div>
-            8 (3952) 951-966
+            8 (3952) 59-79-39
           </a>
         </div>
       </div>
